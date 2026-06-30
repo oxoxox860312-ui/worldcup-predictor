@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2026 世界盃淘汰賽預測器</title>
+<meta name="description" content="拖曳國旗，預測 2026 世界盃淘汰賽冠軍，並產生可分享網址。" />
+<meta property="og:title" content="2026 世界盃淘汰賽預測器" />
+<meta property="og:description" content="拖曳國旗，預測你的世界盃冠軍。" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="assets/og-image.svg" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<main class="app">
+  <section class="header">
+    <div class="title">FIFA WORLD CUP 2026™</div>
+    <div class="hint">拖曳國旗到問號格。預測完成後可複製分享網址傳給朋友。</div>
+    <div class="toolbar"><button class="btn" id="toggleNames">國名已顯示</button><button class="btn" id="clearBtn">清空預測</button><button class="btn gold" id="shareBtn">複製分享網址</button><button class="btn" id="exportBtn">匯出 PNG</button></div><div class="share-status" id="shareStatus"></div>
+  </section>
+  <div class="stage-wrap"><div class="stage" id="stage">
+    <svg class="lines" id="lines" viewBox="0 0 1260 870" preserveAspectRatio="none"></svg>
+    <div class="label" style="left:528px;top:132px;width:204px">WORLD<br>CHAMPION</div>
+    <div class="node champion-box" data-slot="champion" style="left:575px;top:232px"></div>
+    <div class="node final-box" data-slot="final-left" style="left:514px;top:338px"></div>
+    <div class="node final-box" data-slot="final-right" style="left:654px;top:338px"></div>
+    <div class="bronze-label" style="left:548px;top:576px;width:164px;font-size:13px;letter-spacing:.8px">BRONZE FINAL</div>
+    <div class="node bronze-box" data-slot="bronze-left" style="left:530px;top:612px"></div>
+    <div class="node bronze-box" data-slot="bronze-right" style="left:656px;top:612px"></div>
+    <div class="cup">🏆</div><div class="logo26">26<small>FIFA WORLD CUP 2026</small></div>
+  </div></div>
+  <div class="note">v4.0｜GitHub Pages 正式版｜SVG 國旗＋分享網址</div>
+</main>
+<script>
+const stage=document.getElementById('stage'),svg=document.getElementById('lines');
+
+const FLAG_SVG={
+ de:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h60v13.33H0z"/><path fill="#dd0000" d="M0 13.33h60v13.34H0z"/><path fill="#ffce00" d="M0 26.67h60V40H0z"/></svg>`,
+ py:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#d52b1e" d="M0 0h60v13.33H0z"/><path fill="#fff" d="M0 13.33h60v13.34H0z"/><path fill="#0038a8" d="M0 26.67h60V40H0z"/><circle cx="30" cy="20" r="5" fill="#f3c400" stroke="#222" stroke-width=".8"/></svg>`,
+ fr:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#002395" d="M0 0h20v40H0z"/><path fill="#fff" d="M20 0h20v40H20z"/><path fill="#ed2939" d="M40 0h20v40H40z"/></svg>`,
+ se:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#006aa7" d="M0 0h60v40H0z"/><path fill="#fecc00" d="M0 16h60v8H0z"/><path fill="#fecc00" d="M20 0h8v40h-8z"/></svg>`,
+ za:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#de3831" d="M0 0h60v20H0z"/><path fill="#002395" d="M0 20h60v20H0z"/><path fill="#007a4d" d="M0 0l30 20L0 40z"/><path fill="#ffb612" d="M0 0l25 20L0 40z"/><path d="M0 4l22 16L0 36z"/><path fill="#fff" d="M22 14h38v12H22z"/><path fill="#007a4d" d="M25 16h35v8H25z"/></svg>`,
+ ca:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#d80621" d="M0 0h15v40H0zm45 0h15v40H45z"/><path fill="#fff" d="M15 0h30v40H15z"/><path fill="#d80621" d="M30 8l3 8 7-3-4 7 6 4-8 1 2 8-6-5-6 5 2-8-8-1 6-4-4-7 7 3z"/></svg>`,
+ nl:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#ae1c28" d="M0 0h60v13.33H0z"/><path fill="#fff" d="M0 13.33h60v13.34H0z"/><path fill="#21468b" d="M0 26.67h60V40H0z"/></svg>`,
+ ma:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#c1272d" d="M0 0h60v40H0z"/><path fill="none" stroke="#006233" stroke-width="2" d="M30 11l2.8 8.6h9L34.5 25l2.8 8.5L30 28.2l-7.3 5.3 2.8-8.5-7.3-5.4h9z"/></svg>`,
+ pt:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#006600" d="M0 0h24v40H0z"/><path fill="#ff0000" d="M24 0h36v40H24z"/><circle cx="24" cy="20" r="7" fill="#ffcc00" stroke="#fff" stroke-width="1"/></svg>`,
+ hr:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#f00" d="M0 0h60v13.33H0z"/><path fill="#fff" d="M0 13.33h60v13.34H0z"/><path fill="#171796" d="M0 26.67h60V40H0z"/><g transform="translate(24 12)"><path fill="#fff" stroke="#222" stroke-width=".4" d="M0 0h12v16H0z"/><path fill="#e00000" d="M0 0h4v4H0zm8 0h4v4H8zM4 4h4v4H4zM0 8h4v4H0zm8 0h4v4H8zM4 12h4v4H4z"/></g></svg>`,
+ es:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#aa151b" d="M0 0h60v10H0zm0 30h60v10H0z"/><path fill="#f1bf00" d="M0 10h60v20H0z"/><rect x="13" y="17" width="6" height="8" fill="#aa151b"/></svg>`,
+ at:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#ed2939" d="M0 0h60v13.33H0z"/><path fill="#fff" d="M0 13.33h60v13.34H0z"/><path fill="#ed2939" d="M0 26.67h60V40H0z"/></svg>`,
+ us:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#b22234" d="M0 0h60v40H0z"/><g fill="#fff"><path d="M0 3h60v3H0zm0 6h60v3H0zm0 6h60v3H0zm0 6h60v3H0zm0 6h60v3H0zm0 6h60v3H0"/></g><path fill="#3c3b6e" d="M0 0h26v22H0z"/><g fill="#fff"><circle cx="4" cy="4" r="1"/><circle cx="10" cy="4" r="1"/><circle cx="16" cy="4" r="1"/><circle cx="22" cy="4" r="1"/><circle cx="7" cy="9" r="1"/><circle cx="13" cy="9" r="1"/><circle cx="19" cy="9" r="1"/><circle cx="4" cy="14" r="1"/><circle cx="10" cy="14" r="1"/><circle cx="16" cy="14" r="1"/><circle cx="22" cy="14" r="1"/></g></svg>`,
+ ba:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#002395" d="M0 0h60v40H0z"/><path fill="#fecb00" d="M20 0h40L35 40H20z"/><g fill="#fff"><path d="M7 4l1 3h3L8.5 9l1 3-2.5-2-2.5 2 1-3L3 7h3z"/><path d="M13 10l1 3h3l-2.5 2 1 3-2.5-2-2.5 2 1-3-2.5-2h3z"/><path d="M19 16l1 3h3l-2.5 2 1 3-2.5-2-2.5 2 1-3-2.5-2h3z"/><path d="M25 22l1 3h3l-2.5 2 1 3-2.5-2-2.5 2 1-3-2.5-2h3z"/></g></svg>`,
+ be:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h20v40H0z"/><path fill="#fae042" d="M20 0h20v40H20z"/><path fill="#ed2939" d="M40 0h20v40H40z"/></svg>`,
+ sn:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#00853f" d="M0 0h20v40H0z"/><path fill="#fdef42" d="M20 0h20v40H20z"/><path fill="#e31b23" d="M40 0h20v40H40z"/><path fill="#00853f" d="M30 11l2 6h6l-5 3.6 2 6-5-3.8-5 3.8 2-6-5-3.6h6z"/></svg>`,
+ br:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#009b3a" d="M0 0h60v40H0z"/><path fill="#ffdf00" d="M30 5l24 15-24 15L6 20z"/><circle cx="30" cy="20" r="9" fill="#002776"/><path stroke="#fff" stroke-width="2" d="M22 18c8-2 14 0 18 4"/></svg>`,
+ jp:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h60v40H0z"/><circle cx="30" cy="20" r="10" fill="#bc002d"/></svg>`,
+ ci:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#f77f00" d="M0 0h20v40H0z"/><path fill="#fff" d="M20 0h20v40H20z"/><path fill="#009e60" d="M40 0h20v40H40z"/></svg>`,
+ no:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#ba0c2f" d="M0 0h60v40H0z"/><path fill="#fff" d="M0 15h60v10H0zM18 0h10v40H18z"/><path fill="#00205b" d="M0 17.5h60v5H0zM20.5 0h5v40h-5z"/></svg>`,
+ mx:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#006847" d="M0 0h20v40H0z"/><path fill="#fff" d="M20 0h20v40H20z"/><path fill="#ce1126" d="M40 0h20v40H40z"/><circle cx="30" cy="20" r="5" fill="#8c6a2a"/></svg>`,
+ ec:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#ffdd00" d="M0 0h60v20H0z"/><path fill="#034ea2" d="M0 20h60v10H0z"/><path fill="#ed1c24" d="M0 30h60v10H0z"/><circle cx="30" cy="20" r="4" fill="#8c6a2a"/></svg>`,
+ eng:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h60v40H0z"/><path fill="#cf142b" d="M0 16h60v8H0zM26 0h8v40h-8z"/></svg>`,
+ cd:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#00a3e0" d="M0 0h60v40H0z"/><path stroke="#f7d618" stroke-width="11" d="M-4 42L64 -2"/><path stroke="#ce1021" stroke-width="7" d="M-4 42L64 -2"/><path fill="#f7d618" d="M12 5l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z"/></svg>`,
+ ar:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#74acdf" d="M0 0h60v13.33H0z"/><path fill="#fff" d="M0 13.33h60v13.34H0z"/><path fill="#74acdf" d="M0 26.67h60V40H0z"/><circle cx="30" cy="20" r="4" fill="#f6b40e"/></svg>`,
+ cv:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#003893" d="M0 0h60v40H0z"/><path fill="#fff" d="M0 23h60v8H0z"/><path fill="#cf2027" d="M0 26h60v2H0z"/><g fill="#ffdd00"><circle cx="16" cy="20" r="1.4"/><circle cx="20" cy="18" r="1.4"/><circle cx="24" cy="20" r="1.4"/><circle cx="20" cy="22" r="1.4"/></g></svg>`,
+ nz:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#00247d" d="M0 0h60v40H0z"/><path fill="#fff" d="M0 0h28v18H0z"/><path fill="#012169" d="M0 0h26v16H0z"/><path stroke="#fff" stroke-width="4" d="M0 0l26 16M26 0L0 16"/><path stroke="#c8102e" stroke-width="2" d="M0 0l26 16M26 0L0 16"/><path fill="#fff" d="M10 0h6v16h-6zM0 5h26v6H0z"/><path fill="#c8102e" d="M11 0h4v16h-4zM0 6h26v4H0z"/><g fill="#c8102e" stroke="#fff" stroke-width="1"><circle cx="43" cy="10" r="3"/><circle cx="50" cy="20" r="3"/><circle cx="39" cy="25" r="3"/><circle cx="48" cy="31" r="3"/></g></svg>`,
+ eg:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#ce1126" d="M0 0h60v13.33H0z"/><path fill="#fff" d="M0 13.33h60v13.34H0z"/><path d="M0 26.67h60V40H0z"/><rect x="27" y="17" width="6" height="6" fill="#c09300"/></svg>`,
+ ch:`<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path fill="#d52b1e" d="M0 0h40v40H0z"/><path fill="#fff" d="M16 8h8v24h-8z"/><path fill="#fff" d="M8 16h24v8H8z"/></svg>`,
+ dz:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#006233" d="M0 0h30v40H0z"/><path fill="#fff" d="M30 0h30v40H30z"/><circle cx="32" cy="20" r="9" fill="#d21034"/><circle cx="35" cy="20" r="8" fill="#fff"/><path fill="#d21034" d="M39 14l2 5h5l-4 3 1.5 5-4.5-3-4.5 3 1.5-5-4-3h5z"/></svg>`,
+ co:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#fcd116" d="M0 0h60v20H0z"/><path fill="#003893" d="M0 20h60v10H0z"/><path fill="#ce1126" d="M0 30h60v10H0z"/></svg>`,
+ gh:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path fill="#ce1126" d="M0 0h60v13.33H0z"/><path fill="#fcd116" d="M0 13.33h60v13.34H0z"/><path fill="#006b3f" d="M0 26.67h60V40H0z"/><path d="M30 13l2.2 6.5H39l-5.5 4 2.1 6.5-5.6-4-5.6 4 2.1-6.5-5.5-4h6.8z"/></svg>`
+};
+function flagMarkup(code){return `<span class="flag"><img alt="" src="data:image/svg+xml;charset=UTF-8,${encodeURIComponent(FLAG_SVG[code]||FLAG_SVG.eng)}"></span>`}
+
+const teamsLeft=[['de','德國'],['py','巴拉圭'],['fr','法國'],['se','瑞典'],['za','南非'],['ca','加拿大'],['nl','荷蘭'],['ma','摩洛哥'],['pt','葡萄牙'],['hr','克羅埃西亞'],['es','西班牙'],['at','奧地利'],['us','美國'],['ba','波士尼亞'],['be','比利時'],['sn','塞內加爾']];
+const teamsRight=[['br','巴西'],['jp','日本'],['ci','象牙海岸'],['no','挪威'],['mx','墨西哥'],['ec','厄瓜多'],['eng','英格蘭'],['cd','剛果民主共和國'],['ar','阿根廷'],['cv','維德角'],['nz','紐西蘭'],['eg','埃及'],['ch','瑞士'],['dz','阿爾及利亞'],['co','哥倫比亞'],['gh','迦納']];
+const y16=[58,146,234,322,410,498,586,674];
+const SOURCE_W=150;
+const SOURCE_H=34;
+const pos={L:{bankX:38,r16X:220,qfX:346,sfX:456,finalX:514},R:{bankX:1072,r16X:962,qfX:836,sfX:726,finalX:654}};
+const nodes={};
+function mid(a,b){return(a+b)/2} function yAt(list,i){return list[i]}
+const y8=[mid(y16[0],y16[1]),mid(y16[2],y16[3]),mid(y16[4],y16[5]),mid(y16[6],y16[7])];
+const y4=[mid(y8[0],y8[1]),mid(y8[2],y8[3])];
+const y2=[mid(y4[0],y4[1])];
+function addNode(id,x,cy,cls=''){const d=document.createElement('div');d.className='node '+cls;d.dataset.slot=id;d.style.left=x+'px';d.style.top=(cy-26)+'px';stage.appendChild(d);nodes[id]=d;return d}
+function bindDrag(el){el.addEventListener('dragstart',e=>{el.classList.add('dragging');e.dataTransfer.setData('text/plain',JSON.stringify({code:el.dataset.code,name:el.dataset.name}));setTimeout(()=>{if(el.parentElement?.classList.contains('node')){el.parentElement.classList.remove('filled');el.remove();save()}},0)});el.addEventListener('dragend',()=>el.classList.remove('dragging'))}
+function addBankTeam(code,name,x,y){const d=document.createElement('div');d.className='team source';d.draggable=true;d.dataset.code=code;d.dataset.name=name;d.style.left=x+'px';d.style.top=y+'px';d.innerHTML=`${flagMarkup(code)}<span class="name">${name}</span>`;stage.appendChild(d);bindDrag(d);return d}
+function teamEl(code,name){const d=document.createElement('div');d.className='team';d.draggable=true;d.dataset.code=code;d.dataset.name=name;d.innerHTML=`${flagMarkup(code)}<span class="name">${name}</span>`;bindDrag(d);return d}
+for(let i=0;i<8;i++){const cy=y16[i];addBankTeam(...teamsLeft[i*2],pos.L.bankX,cy-39);addBankTeam(...teamsLeft[i*2+1],pos.L.bankX,cy+3);addNode('L16-'+i,pos.L.r16X,cy);addBankTeam(...teamsRight[i*2],pos.R.bankX,cy-39);addBankTeam(...teamsRight[i*2+1],pos.R.bankX,cy+3);addNode('R16-'+i,pos.R.r16X,cy)}
+y8.forEach((cy,i)=>{addNode('L8-'+i,pos.L.qfX,cy);addNode('R8-'+i,pos.R.qfX,cy)});
+y4.forEach((cy,i)=>{addNode('L4-'+i,pos.L.sfX,cy);addNode('R4-'+i,pos.R.sfX,cy)});
+function box(el){return{l:parseFloat(el.style.left),t:parseFloat(el.style.top),w:el.offsetWidth,h:el.offsetHeight,cx:parseFloat(el.style.left)+el.offsetWidth/2,cy:parseFloat(el.style.top)+el.offsetHeight/2}}
+function path(d){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);p.setAttribute('class','line');svg.appendChild(p)}
+function leftPair(fromA,fromB,to){const a=box(fromA),b=box(fromB),t=box(to),j=(a.l+a.w+t.l)/2,y=mid(a.cy,b.cy);path(`M ${a.l+a.w} ${a.cy} H ${j} M ${b.l+b.w} ${b.cy} H ${j} M ${j} ${a.cy} V ${b.cy} M ${j} ${y} H ${t.l}`)}
+function rightPair(fromA,fromB,to){const a=box(fromA),b=box(fromB),t=box(to),j=(t.l+t.w+a.l)/2,y=mid(a.cy,b.cy);path(`M ${a.l} ${a.cy} H ${j} M ${b.l} ${b.cy} H ${j} M ${j} ${a.cy} V ${b.cy} M ${j} ${y} H ${t.l+t.w}`)}
+function drawLines(){svg.innerHTML='';
+  for(let i=0;i<8;i++){const cy=y16[i];path(`M ${pos.L.bankX+SOURCE_W} ${cy-22} H ${pos.L.r16X} M ${pos.L.bankX+SOURCE_W} ${cy+20} H ${pos.L.r16X}`);path(`M ${pos.R.bankX} ${cy-22} H ${pos.R.r16X+78} M ${pos.R.bankX} ${cy+20} H ${pos.R.r16X+78}`)}
+  for(let i=0;i<4;i++){leftPair(nodes['L16-'+i*2],nodes['L16-'+(i*2+1)],nodes['L8-'+i]);rightPair(nodes['R16-'+i*2],nodes['R16-'+(i*2+1)],nodes['R8-'+i])}
+  for(let i=0;i<2;i++){leftPair(nodes['L8-'+i*2],nodes['L8-'+(i*2+1)],nodes['L4-'+i]);rightPair(nodes['R8-'+i*2],nodes['R8-'+(i*2+1)],nodes['R4-'+i])}
+  const ch=box(document.querySelector('[data-slot="champion"]')),fl=box(document.querySelector('[data-slot="final-left"]')),fr=box(document.querySelector('[data-slot="final-right"]')),bl=box(document.querySelector('[data-slot="bronze-left"]')),br=box(document.querySelector('[data-slot="bronze-right"]'));
+  leftPair(nodes['L4-0'],nodes['L4-1'],document.querySelector('[data-slot="final-left"]'));
+  rightPair(nodes['R4-0'],nodes['R4-1'],document.querySelector('[data-slot="final-right"]'));
+  const finalY=(ch.t+ch.h+fl.t)/2;
+  path(`M ${fl.cx} ${fl.t} V ${finalY} H ${fr.cx} V ${fr.t}`);
+  path(`M ${ch.cx} ${ch.t+ch.h} V ${finalY}`);
+  const bronzeY=bl.cy;
+  path(`M ${bl.l+bl.w} ${bronzeY} H ${br.l}`);
+}
+function bindDrops(){document.querySelectorAll('.node').forEach(slot=>{slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('drop-hover')});slot.addEventListener('dragleave',()=>slot.classList.remove('drop-hover'));slot.addEventListener('drop',e=>{e.preventDefault();slot.classList.remove('drop-hover');let data;try{data=JSON.parse(e.dataTransfer.getData('text/plain'))}catch{return}slot.innerHTML='';slot.appendChild(teamEl(data.code||data.flag,data.name));slot.classList.add('filled');save();updateChampionGlow()})})}
+function save(){const data={};document.querySelectorAll('.node').forEach(s=>{const t=s.querySelector('.team');if(t)data[s.dataset.slot]={code:t.dataset.code,name:t.dataset.name}});localStorage.setItem('wc2026PredictorV30',JSON.stringify(data))}
+function load(){const data=JSON.parse(localStorage.getItem('wc2026PredictorV30')||'{}');document.querySelectorAll('.node').forEach(s=>{s.innerHTML='';s.classList.remove('filled');if(data[s.dataset.slot]){s.appendChild(teamEl(data[s.dataset.slot].code||data[s.dataset.slot].flag,data[s.dataset.slot].name));s.classList.add('filled')}});updateChampionGlow()}
+function clearAll(){localStorage.removeItem('wc2026PredictorV30');document.querySelectorAll('.node').forEach(s=>{s.innerHTML='';s.classList.remove('filled')});updateChampionGlow()}
+function updateChampionGlow(){const ch=document.querySelector('[data-slot="champion"]');ch.style.boxShadow=ch.querySelector('.team')?'0 0 0 3px #d7b15a55,0 0 36px #d7b15a99,inset 0 1px 0 #fff3':''}
+document.getElementById('clearBtn').onclick=clearAll;document.getElementById('toggleNames').onclick=()=>document.body.classList.toggle('show-names');document.getElementById('exportBtn').onclick=()=>alert('目前可直接用瀏覽器截圖；下一版可接 html2canvas 做真正 PNG 匯出。');
+bindDrops();load();setTimeout(drawLines,80);window.addEventListener('resize',drawLines);
+</script>
+
+<script src="js/script.js"></script>
+</body>
+</html>
