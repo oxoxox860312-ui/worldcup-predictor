@@ -5,20 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>2026 世界盃淘汰賽預測器</title>
 <meta name="description" content="拖曳國旗，預測 2026 世界盃淘汰賽冠軍，並產生可分享網址。" />
-<meta property="og:title" content="2026 世界盃淘汰賽預測器" />
-<meta property="og:description" content="拖曳國旗，預測你的世界盃冠軍。" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="assets/og-image.svg" />
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-<link rel="stylesheet" href="css/style.css" />
+<style>
+:root{--bg:#050505;--card:#151515;--line:#f1f1f1;--text:#fff;--gold:#d7b15a;--slot-w:78px;--slot-h:52px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#050505;color:var(--text);font-family:Inter,system-ui,'Noto Sans TC','Microsoft JhengHei',sans-serif}body{padding:12px;background:linear-gradient(135deg,#d90000 0 13%,#a8ff00 13% 47%,#9c6aef 47% 52%,#070707 52% 100%)}
+.app{max-width:1360px;margin:0 auto;background:radial-gradient(ellipse at 50% 24%,#1e1e1e 0,#0d0d0d 47%,#030303 100%);border-radius:34px;min-height:980px;padding:30px 26px 38px;box-shadow:0 26px 90px #000b;position:relative;overflow:hidden}.app:before{content:'26';position:absolute;inset:70px 0 auto 0;text-align:center;font-family:Impact,'Arial Black',sans-serif;font-size:760px;line-height:.8;color:#fff;opacity:.035;pointer-events:none;letter-spacing:-35px}.app:after{content:'';position:absolute;left:0;right:0;top:420px;height:220px;background:#0006;pointer-events:none}
+.header{position:relative;z-index:2;text-align:center}.title{font-family:Impact,'Arial Black','Anton',sans-serif;font-size:clamp(48px,8vw,104px);letter-spacing:-3px;line-height:.9;margin:18px 0 10px;white-space:nowrap}.hint{color:#ddd;font-size:14px;font-weight:700;margin-bottom:14px}.toolbar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.share-status{position:relative;z-index:2;text-align:center;color:#ffe29a;font-size:13px;font-weight:800;min-height:18px;margin-top:8px}.btn{border:1px solid #ffffff25;background:#171717;color:#fff;border-radius:999px;padding:10px 16px;font-weight:900;cursor:pointer}.btn:hover{background:#2b2b2b}.btn.gold{border-color:#d7b15a80;color:#ffe29a}
+.stage-wrap{position:relative;z-index:2;overflow-x:auto;padding-bottom:10px}.stage{position:relative;width:1260px;height:870px;margin:0 auto}.lines{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible}.line{stroke:var(--line);stroke-width:2.5;fill:none;stroke-linecap:square;stroke-linejoin:miter;opacity:.95;filter:drop-shadow(0 0 2px #000)}
+.node{position:absolute;z-index:3;width:var(--slot-w);height:var(--slot-h);border:1.5px solid #d8d8d8;border-radius:12px;background:linear-gradient(145deg,#242424,#111);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px #0009,inset 0 1px 0 #fff2;transition:.18s}.node:before{content:'?';font-size:26px;font-weight:1000;color:#fff;text-shadow:0 1px 8px #000}.node.filled:before{display:none}.node.drop-hover{border-color:var(--gold);box-shadow:0 0 0 3px #d7b15a45,0 0 22px #d7b15a55;background:#312912}
+.team{width:74px;height:46px;border:1px solid #ffffff45;border-radius:10px;background:linear-gradient(145deg,#2a2a2a,#101010);display:flex;align-items:center;justify-content:center;gap:0;padding:0;cursor:grab;user-select:none;box-shadow:inset 0 1px 0 #fff2,0 7px 14px #0007}.team:active{cursor:grabbing}.flag{display:flex;align-items:center;justify-content:center;line-height:1}.flag img{width:42px;height:28px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px #ffffff30}.team .name{display:none}.team.source{position:absolute;z-index:4;width:150px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:3px 10px}.team.source .flag img{width:43px;height:27px}.team.source .name{display:block;font-size:14px;font-weight:900;color:#eee;white-space:nowrap;line-height:1}.node .team{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:0}.node .team .name{display:none}.dragging{opacity:.45;transform:scale(.92)}
+.champion-box{width:110px;height:76px;border-radius:18px}.champion-box:before{font-size:38px}.champion-box .team{width:100%;height:100%;border-radius:16px}.champion-box .flag img{width:58px;height:38px}.final-box{width:92px;height:56px}.bronze-box{width:74px;height:46px}.bronze-box .team{width:100%;height:100%}.bronze-box .flag img{width:42px;height:27px}
+.label{position:absolute;z-index:3;text-align:center;font-family:Impact,'Arial Black',sans-serif;line-height:.92;color:#fff;text-shadow:0 4px 18px #000;font-size:34px;letter-spacing:-1px}.bronze-label{position:absolute;z-index:3;font-size:12px;color:#eee;text-align:center}.cup{position:absolute;z-index:3;font-size:120px;left:570px;top:682px;filter:drop-shadow(0 0 24px #d19c33aa)}.logo26{position:absolute;z-index:3;left:532px;top:804px;width:190px;text-align:center;font-family:Impact,'Arial Black',sans-serif;font-size:74px;line-height:.55;letter-spacing:-6px}.logo26 small{font-family:system-ui,sans-serif;display:block;font-size:13px;letter-spacing:.2px;margin-top:12px}.note{position:relative;z-index:2;text-align:center;color:#bbb;font-size:12px;margin-top:10px}
+body.show-names .team.source .name{display:block}
+@media(max-width:900px){body{padding:6px}.app{border-radius:22px;padding:18px 10px}.title{font-size:54px;white-space:normal}.hint{font-size:12px}.toolbar{position:sticky;left:0}.stage{width:1260px}}
+</style>
 </head>
 <body>
-
 <main class="app">
   <section class="header">
     <div class="title">FIFA WORLD CUP 2026™</div>
     <div class="hint">拖曳國旗到問號格。預測完成後可複製分享網址傳給朋友。</div>
-    <div class="toolbar"><button class="btn" id="toggleNames">國名已顯示</button><button class="btn" id="clearBtn">清空預測</button><button class="btn gold" id="shareBtn">複製分享網址</button><button class="btn" id="exportBtn">匯出 PNG</button></div><div class="share-status" id="shareStatus"></div>
+    <div class="toolbar"><button class="btn" id="toggleNames">國名已顯示</button><button class="btn" id="clearBtn">清空預測</button><button class="btn gold" id="shareBtn">複製分享網址</button><button class="btn" id="exportBtn">匯出 PNG</button></div>
+    <div class="share-status" id="shareStatus"></div>
   </section>
   <div class="stage-wrap"><div class="stage" id="stage">
     <svg class="lines" id="lines" viewBox="0 0 1260 870" preserveAspectRatio="none"></svg>
@@ -31,10 +38,17 @@
     <div class="node bronze-box" data-slot="bronze-right" style="left:656px;top:612px"></div>
     <div class="cup">🏆</div><div class="logo26">26<small>FIFA WORLD CUP 2026</small></div>
   </div></div>
-  <div class="note">v4.0｜GitHub Pages 正式版｜SVG 國旗＋分享網址</div>
+  <div class="note">v4.0｜單檔 GitHub Pages 版｜SVG 國旗＋分享網址</div>
 </main>
 <script>
 const stage=document.getElementById('stage'),svg=document.getElementById('lines');
+const STORAGE_KEY='wc2026PredictorV40';
+const shareStatus=document.getElementById('shareStatus');
+function encodePrediction(data){return btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function decodePrediction(raw){try{raw=raw.replace(/-/g,'+').replace(/_/g,'/');while(raw.length%4)raw+='=';return JSON.parse(decodeURIComponent(escape(atob(raw))))}catch{return null}}
+function getPredictionData(){const data={};document.querySelectorAll('.node').forEach(s=>{const t=s.querySelector('.team');if(t)data[s.dataset.slot]={code:t.dataset.code,name:t.dataset.name}});return data}
+function getInitialPrediction(){const params=new URLSearchParams(location.search);const shared=params.get('p');if(shared){const decoded=decodePrediction(shared);if(decoded)return decoded}return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}
+async function sharePrediction(){const data=getPredictionData();if(!Object.keys(data).length){shareStatus.textContent='還沒有任何預測可以分享';return}const url=new URL(location.href);url.searchParams.set('p',encodePrediction(data));const link=url.toString();try{await navigator.clipboard.writeText(link);shareStatus.textContent='分享網址已複製，可以直接傳給朋友！'}catch{shareStatus.textContent='分享網址已產生，請手動複製網址列。';history.replaceState(null,'',link);return}history.replaceState(null,'',link)}
 
 const FLAG_SVG={
  de:`<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h60v13.33H0z"/><path fill="#dd0000" d="M0 13.33h60v13.34H0z"/><path fill="#ffce00" d="M0 26.67h60V40H0z"/></svg>`,
@@ -108,14 +122,12 @@ function drawLines(){svg.innerHTML='';
   path(`M ${bl.l+bl.w} ${bronzeY} H ${br.l}`);
 }
 function bindDrops(){document.querySelectorAll('.node').forEach(slot=>{slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('drop-hover')});slot.addEventListener('dragleave',()=>slot.classList.remove('drop-hover'));slot.addEventListener('drop',e=>{e.preventDefault();slot.classList.remove('drop-hover');let data;try{data=JSON.parse(e.dataTransfer.getData('text/plain'))}catch{return}slot.innerHTML='';slot.appendChild(teamEl(data.code||data.flag,data.name));slot.classList.add('filled');save();updateChampionGlow()})})}
-function save(){const data={};document.querySelectorAll('.node').forEach(s=>{const t=s.querySelector('.team');if(t)data[s.dataset.slot]={code:t.dataset.code,name:t.dataset.name}});localStorage.setItem('wc2026PredictorV30',JSON.stringify(data))}
-function load(){const data=JSON.parse(localStorage.getItem('wc2026PredictorV30')||'{}');document.querySelectorAll('.node').forEach(s=>{s.innerHTML='';s.classList.remove('filled');if(data[s.dataset.slot]){s.appendChild(teamEl(data[s.dataset.slot].code||data[s.dataset.slot].flag,data[s.dataset.slot].name));s.classList.add('filled')}});updateChampionGlow()}
-function clearAll(){localStorage.removeItem('wc2026PredictorV30');document.querySelectorAll('.node').forEach(s=>{s.innerHTML='';s.classList.remove('filled')});updateChampionGlow()}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(getPredictionData()))}
+function load(){const data=getInitialPrediction();document.querySelectorAll('.node').forEach(s=>{s.innerHTML='';s.classList.remove('filled');if(data[s.dataset.slot]){s.appendChild(teamEl(data[s.dataset.slot].code||data[s.dataset.slot].flag,data[s.dataset.slot].name));s.classList.add('filled')}});updateChampionGlow()}
+function clearAll(){localStorage.removeItem(STORAGE_KEY);history.replaceState(null,'',location.pathname);if(shareStatus)shareStatus.textContent='';document.querySelectorAll('.node').forEach(s=>{s.innerHTML='';s.classList.remove('filled')});updateChampionGlow()}
 function updateChampionGlow(){const ch=document.querySelector('[data-slot="champion"]');ch.style.boxShadow=ch.querySelector('.team')?'0 0 0 3px #d7b15a55,0 0 36px #d7b15a99,inset 0 1px 0 #fff3':''}
-document.getElementById('clearBtn').onclick=clearAll;document.getElementById('toggleNames').onclick=()=>document.body.classList.toggle('show-names');document.getElementById('exportBtn').onclick=()=>alert('目前可直接用瀏覽器截圖；下一版可接 html2canvas 做真正 PNG 匯出。');
+document.getElementById('clearBtn').onclick=clearAll;document.getElementById('toggleNames').onclick=()=>document.body.classList.toggle('show-names');document.getElementById('shareBtn').onclick=sharePrediction;document.getElementById('exportBtn').onclick=()=>alert('目前建議使用瀏覽器或系統截圖；分享預測請使用「複製分享網址」。');
 bindDrops();load();setTimeout(drawLines,80);window.addEventListener('resize',drawLines);
 </script>
-
-<script src="js/script.js"></script>
 </body>
 </html>
